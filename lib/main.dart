@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:victorapp/models/todo_list.dart';
 
 import 'models/todo.dart';
 
@@ -47,40 +48,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget content = StreamBuilder(
-      stream: Firestore.instance.collection('tasks').snapshots(),
-      builder: (BuildContext buildContext, AsyncSnapshot asyncSnapshot) {
-        if (asyncSnapshot.hasError) {
-          return Center(
-            child: Text("Error: ${asyncSnapshot.error}"),
-          );
-        }
-
-        switch (asyncSnapshot.connectionState) {
-          case ConnectionState.waiting:
-            return Center(
-              child: LinearProgressIndicator(),
-            );
-            break;
-          default:
-            var todosString = asyncSnapshot.data.toString();
-            Map todoMap = jsonDecode(todosString);
-            var todo = Todo.fromJson(todoMap);
-        
-            return CheckboxListTile(
-              title: Text(todo.title),
-              value: todo.done,
-              onChanged: (value) {
-                setState(() {
-                  todo.done = value;
-                });
-              }
-            );
-            break;
-        }
-
-      });
-    
     return Scaffold(
       appBar: AppBar(
         /*leading: Text("menu"),
@@ -100,7 +67,7 @@ class _HomePageState extends State<HomePage> {
             child: Text("Olá mundo"),
           ),
         ),*/
-      body: ListView.builder(
+      /*body: ListView.builder(
           itemCount: widget.todos.length,
           itemBuilder: (BuildContext context, int index) {
             final item = widget.todos[index];
@@ -134,9 +101,18 @@ class _HomePageState extends State<HomePage> {
                     remove(index);
                   }
                 },
-                child: content
+                child: CheckboxListTile(
+                    title: Text(item.title),
+                    value: item.done,
+                    onChanged: (value) {
+                      setState(() {
+                        item.done = value;
+                      });
+                    }
+                )
             );
-          }),
+          }),*/
+      body: new TodoList(),
       floatingActionButton: FloatingActionButton(
         onPressed: addTask,
         child: Icon(Icons.add),

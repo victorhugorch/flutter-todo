@@ -62,78 +62,12 @@ class _HomePageState extends State<HomePage> {
               labelStyle: TextStyle(color: Colors.white)),
         ),
       ),
-      /*body: Container(
-          child: Center(
-            child: Text("Olá mundo"),
-          ),
-        ),*/
-      /*body: ListView.builder(
-          itemCount: widget.todos.length,
-          itemBuilder: (BuildContext context, int index) {
-            final item = widget.todos[index];
-
-            return Dismissible(
-                key: Key(item.title),
-                background: Container(
-                  color: Colors.green.withOpacity(0.2),
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Icon(
-                    Icons.check,
-                    color: Colors.white,
-                  ),
-                ),
-                secondaryBackground: Container(
-                  color: Colors.red.withOpacity(0.2),
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                  ),
-                ),
-                onDismissed: (direction) {
-                  if (direction == DismissDirection.startToEnd) {
-                    return;
-                  }
-
-                  if (direction == DismissDirection.endToStart) {
-                    remove(index);
-                  }
-                },
-                child: CheckboxListTile(
-                    title: Text(item.title),
-                    value: item.done,
-                    onChanged: (value) {
-                      setState(() {
-                        item.done = value;
-                      });
-                    }
-                )
-            );
-          }),*/
       body: new TodoList(),
       floatingActionButton: FloatingActionButton(
-        onPressed: addTask,
+        onPressed: (){},
         child: Icon(Icons.add),
         backgroundColor: Colors.pink,
       ),
     );
-  }
-
-  void addTask() {
-    if (newTaskController.text.isEmpty) return;
-
-    setState(() {
-      widget.todos.add(Todo(title: newTaskController.text, done: false));
-
-      newTaskController.clear();
-    });
-  }
-
-  void remove(int index) {
-    setState(() {
-      widget.todos.removeAt(index);
-    });
   }
 }

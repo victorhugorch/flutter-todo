@@ -21,26 +21,50 @@ class TodoList extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           default:
-            asyncSnapshot.data.documents.map((DocumentSnapshot document) {
-              var tasks =
-                  new Todo(title: document['title'], done: document['done']);
-
-              print(tasks);
-            });
-
             return new ListView(
               children:
                   asyncSnapshot.data.documents.map((DocumentSnapshot document) {
-                return new CheckboxListTile(
-                    title: new Text(document['title']),
-                    value: document['done'],
-                    onChanged: (value) {
-                      /*setState(() {
-                      item.done = value;
-                      });
-                      }*/
-                      // todo: update in firestore
-                    });
+                    return Dismissible(
+                        key: Key(document['title']),
+                        background: Container(
+                          color: Colors.green.withOpacity(0.2),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          alignment: AlignmentDirectional.centerStart,
+                          child: Icon(
+                            Icons.check,
+                            color: Colors.white,
+                          ),
+                        ),
+                        secondaryBackground: Container(
+                          color: Colors.red.withOpacity(0.2),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.white,
+                          ),
+                        ),
+                        onDismissed: (direction) {
+                          if (direction == DismissDirection.startToEnd) {
+                            return;
+                          }
+
+                          if (direction == DismissDirection.endToStart) {
+                            // todo: remove in firestore
+                            //remove(index);
+                          }
+                        },
+                        child: CheckboxListTile(
+                            title: Text(document['title']),
+                            value: document['done'],
+                            onChanged: (value) {
+                              /* todo: update in firestore
+                              setState(() {
+                                item.done = value;
+                              });*/
+                            }
+                        )
+                    );
               }).toList(),
             );
         }

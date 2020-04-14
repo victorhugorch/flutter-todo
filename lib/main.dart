@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:victorapp/services/firebase.dart';
 import 'package:victorapp/widgets/todo_read.dart';
-
-import 'models/todo.dart';
 
 void main() => runApp(MyApp());
 
@@ -55,10 +53,11 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           if (newTaskController.text.isEmpty) return;
 
-          Firestore.instance
-              .collection('tasks')
-              .document()
-              .setData({"title": newTaskController.text, "done": false});
+          Firebase().create(
+              'tasks', {
+                "title": newTaskController.text,
+                "done": false
+              });
 
           FocusScope.of(context).requestFocus(FocusNode()); // close keyboard
           newTaskController.clear(); // clear input

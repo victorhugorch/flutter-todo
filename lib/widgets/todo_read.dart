@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:victorapp/services/firebase.dart';
 
 class TodoRead extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('tasks').snapshots(),
+      stream: Firebase().stream('tasks'),
       builder:
           (BuildContext context, AsyncSnapshot<QuerySnapshot> asyncSnapshot) {
         if (asyncSnapshot.hasError) {
@@ -24,7 +25,7 @@ class TodoRead extends StatelessWidget {
               children:
                   asyncSnapshot.data.documents.map((DocumentSnapshot document) {
                     return Dismissible(
-                        key: Key(document['title']),
+                        key: Key(document.documentID),
                         background: Container(
                           color: Colors.green.withOpacity(0.2),
                           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -43,24 +44,21 @@ class TodoRead extends StatelessWidget {
                             color: Colors.white,
                           ),
                         ),
-                        onDismissed: (direction) {
+                        confirmDismiss: (direction) async {
+                          print(direction);
                           if (direction == DismissDirection.startToEnd) {
-                            return;
+                            return false;
                           }
 
-                          if (direction == DismissDirection.endToStart) {
-                            // todo: remove in firestore
-                            //remove(index);
-                          }
+                          return Firebase().delete('tasks', document.documentID);
                         },
                         child: CheckboxListTile(
                             title: Text(document['title']),
                             value: document['done'],
                             onChanged: (value) {
-                              /* todo: update in firestore
-                              setState(() {
-                                item.done = value;
-                              });*/
+                              Firebase().update('tasks', document.documentID, {
+                                "done": value
+                              });
                             }
                         )
                     );

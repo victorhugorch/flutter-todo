@@ -1,8 +1,6 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:victorapp/models/todo_list.dart';
+import 'package:victorapp/widgets/todo_read.dart';
 
 import 'models/todo.dart';
 
@@ -23,20 +21,8 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-  var todos = new List<Todo>();
-
   HomePage() {
-    todos = [];
-    todos.add(Todo(title: "Remover estado do app", done: false));
-    todos.add(Todo(title: "Colocar appbar no footer", done: false));
-    todos.add(Todo(title: "Criar um side menu", done: false));
-    todos.add(Todo(title: "Brincar com os texts Style possiveis", done: false));
-    todos.add(
-        Todo(title: "Adicionar floating button pra criar tarefa", done: false));
-    todos.add(Todo(title: "Conectar app com firebase", done: false));
-    todos.add(Todo(
-        title: "Implementar alerta popup ao clicar em add vazio", done: false));
-    todos.add(Todo(title: "Criar uma splash screen ao iniciar", done: true));
+    // constructor
   }
 
   @override
@@ -48,6 +34,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final todoRead = new TodoRead();
+
     return Scaffold(
       appBar: AppBar(
         /*leading: Text("menu"),
@@ -62,9 +50,19 @@ class _HomePageState extends State<HomePage> {
               labelStyle: TextStyle(color: Colors.white)),
         ),
       ),
-      body: new TodoList(),
+      body: todoRead,
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: () {
+          if (newTaskController.text.isEmpty) return;
+
+          Firestore.instance
+              .collection('tasks')
+              .document()
+              .setData({"title": newTaskController.text, "done": false});
+
+          FocusScope.of(context).requestFocus(FocusNode()); // close keyboard
+          newTaskController.clear(); // clear input
+        },
         child: Icon(Icons.add),
         backgroundColor: Colors.pink,
       ),

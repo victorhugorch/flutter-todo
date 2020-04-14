@@ -1,6 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:victorapp/services/firebase.dart';
-import 'package:victorapp/widgets/todo_read.dart';
+import 'package:victorapp/pages/home_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,57 +14,48 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
       ),
-      home: HomePage(),
+      home: SplashScreen(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  HomePage() {
-    // constructor
+class SplashScreen extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => FadeIn();
+}
+
+class FadeIn extends State<SplashScreen> {
+  FlutterLogoStyle _logoStyle = FlutterLogoStyle.markOnly;
+
+  FadeIn() {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _logoStyle = FlutterLogoStyle.horizontal;
+      });
+    });
+
+    Future.delayed(Duration(seconds: 2), () {
+      navigateHomePage(context);
+    });
+  }
+
+  Future navigateHomePage(context) async {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 
   @override
-  State<StatefulWidget> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  var newTaskController = TextEditingController();
-
-  @override
   Widget build(BuildContext context) {
-    final todoRead = new TodoRead();
-
-    return Scaffold(
-      appBar: AppBar(
-        /*leading: Text("menu"),
-          title: Text("Victor's Todo"),
-          actions: <Widget>[Icon(Icons.add_circle_outline)],*/
-        title: TextFormField(
-          controller: newTaskController,
-          keyboardType: TextInputType.text,
-          style: TextStyle(color: Colors.white, fontSize: 18),
-          decoration: InputDecoration(
-              labelText: "New task",
-              labelStyle: TextStyle(color: Colors.white)),
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Container(
+            child: new FlutterLogo(
+              size: 200.0,
+              style: _logoStyle,
+            ),
+          ),
         ),
-      ),
-      body: todoRead,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (newTaskController.text.isEmpty) return;
-
-          Firebase().create(
-              'tasks', {
-                "title": newTaskController.text,
-                "done": false
-              });
-
-          FocusScope.of(context).requestFocus(FocusNode()); // close keyboard
-          newTaskController.clear(); // clear input
-        },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.pink,
       ),
     );
   }

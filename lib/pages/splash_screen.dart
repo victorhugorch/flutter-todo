@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:victorapp/pages/home_page.dart';
+import 'package:victorapp/pages/login_page.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -26,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future navigateHomePage(context) async {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => HomePage()));
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 
   @override

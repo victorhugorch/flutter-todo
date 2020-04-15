@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Firebase {
   create(String collection, data) {
@@ -27,5 +28,14 @@ class Firebase {
 
   stream(String collection) {
     return Firestore.instance.collection(collection).snapshots();
+  }
+
+  signInWithEmailAndPassword(String email, String password) async {
+    final user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password
+    )) as FirebaseUser;
+
+    return user;
   }
 }

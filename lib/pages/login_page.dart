@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:victorapp/pages/home_page.dart';
 import 'package:victorapp/services/firebase.dart';
 import 'package:victorapp/utilities/constants.dart';
 
@@ -9,7 +10,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _formKey = GlobalKey<FormState>();
+  static final _formKey = new GlobalKey<FormState>();
+
+  String _email;
+  String _password;
 
   Widget _buildEmailTF() {
     return Column(
@@ -40,14 +44,8 @@ class _LoginPageState extends State<LoginPage> {
               hintText: 'Enter your Email',
               hintStyle: kHintTextStyle,
             ),
-            validator: (value) {
-              if (value.isEmpty) {
-                // todo: add handle error
-                print('Please enter some text');
-              }
-
-              return null;
-            },
+            validator: (value) => value.isEmpty ? 'Error' : null,
+            onSaved: (value) => _email = value,
           ),
         ),
       ],
@@ -79,6 +77,8 @@ class _LoginPageState extends State<LoginPage> {
               hintText: 'Enter your Password',
               hintStyle: kHintTextStyle,
             ),
+            validator: (value) => value.isEmpty ? 'Need a password' : null,
+            onSaved: (value) => _password = value,
           ),
         ),
       ],
@@ -105,10 +105,7 @@ class _LoginPageState extends State<LoginPage> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () {
-          // todo: get email and password from form
-          //Firebase().signInWithEmailAndPassword(email, password);
-        },
+        onPressed: login,
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -216,6 +213,23 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  login() {
+    _formKey.currentState.save();
+
+    if (_formKey.currentState.validate()) {
+      //var user = Firebase().signInWithEmailAndPassword(_email, _password);
+      _formKey.currentState.reset();
+      navigateHomePage(context);
+    } else {
+      // todo: add else
+    }
+  }
+
+  Future navigateHomePage(context) async {
+    Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => HomePage()));
   }
 
   @override

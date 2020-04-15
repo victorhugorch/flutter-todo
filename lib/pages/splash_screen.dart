@@ -20,11 +20,11 @@ class _SplashScreenState extends State<SplashScreen> {
     });
 
     Future.delayed(Duration(seconds: 2), () {
-      navigateHomePage(context);
+      navigateLoginPage(context);
     });
   }
 
-  Future navigateHomePage(context) async {
+  Future navigateLoginPage(context) async {
     Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }

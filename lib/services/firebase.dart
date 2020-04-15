@@ -31,11 +31,16 @@ class Firebase {
   }
 
   signInWithEmailAndPassword(String email, String password) async {
-    final user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password
-    )) as FirebaseUser;
+    try {
+      final user = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password
+      );
 
-    return user;
+      return user;
+    } catch (error) {
+      print(error.toString());
+      return null;
+    }
   }
 }
